@@ -1,0 +1,41 @@
+const express = require('express');
+const helmet = require('helmet');
+const cors = require('cors');
+const env = require('../config/env');
+const requestLogger = require('./requestLogger');
+const errorHandler = require('./errorHandler');
+const { successResponse } = require('../utils/response');
+const logger = require('../utils/logger');
+
+// Database initialization
+require('../config/database');
+
+const app = express();
+
+// Middleware inside app
+app.use(helmet());
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(requestLogger);
+
+// Health check route
+app.get('/health', (req, res) => {
+  return successResponse(res, {
+    status: 'ok',
+    timestamp: new Date(),
+    environment: env.NODE_ENV
+  });
+});
+
+// Main routes here in the future
+// app.use('/api/v1/...', ...);
+
+// Global Error Handler must be the last middleware
+app.use(errorHandler);
+
+const PORT = env.PORT;
+
+app.listen(PORT, () => {
+  logger.info(`Server running on port ${PORT}`);
+});
