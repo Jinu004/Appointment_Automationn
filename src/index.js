@@ -28,8 +28,9 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Main routes here in the future
-// app.use('/api/v1/...', ...);
+// Main routes
+const tenantRoutes = require('./modules/tenant/tenant.routes');
+app.use('/api/v1/tenants', tenantRoutes);
 
 // Global Error Handler must be the last middleware
 app.use(errorHandler);
