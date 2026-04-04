@@ -1,14 +1,14 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
-const env = require('../config/env');
-const requestLogger = require('./requestLogger');
-const errorHandler = require('./errorHandler');
-const { successResponse } = require('../utils/response');
-const logger = require('../utils/logger');
+const env = require('./config/env');
+const requestLogger = require('./middleware/requestLogger');
+const errorHandler = require('./middleware/errorHandler');
+const { successResponse } = require('./utils/response');
+const logger = require('./utils/logger');
 
 // Database initialization
-require('../config/database');
+require('./config/database');
 
 const app = express();
 
@@ -35,7 +35,7 @@ app.use('/api/v1/tenants', tenantRoutes);
 // Global Error Handler must be the last middleware
 app.use(errorHandler);
 
-const PORT = env.PORT;
+const PORT = env.PORT || 3001;
 
 app.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
